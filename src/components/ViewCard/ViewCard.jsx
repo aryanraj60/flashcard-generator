@@ -8,79 +8,79 @@ import {
 } from "react-icons/md";
 import { GrRedo } from "react-icons/gr";
 import { Link, useParams } from "react-router-dom";
-import Popup from "../modals/Popup.js";
+import Popup from "../Modal/Modal.jsx";
+import { useSelector } from "react-redux";
+import { selectUserCards } from "../../features/appSlice.js";
 
-const Viewcard = ({ data }) => {
-  //useparams used to access perticular id from url
+const ViewCard = ({ data }) => {
+  //fetching id from the url with the help of useParams hook
   const { id } = useParams();
 
-  //state for handling flashterms definition for slider to show particular card term defination.
+  //Fetching user cards data from redux store
+  const userCards = useSelector(selectUserCards);
+
+  //slideIndex state to handle a card definition of terms for slider to display specific card term definition.
   const [slideIndex, setSlideIndex] = useState(1);
 
-  //state for handling popup modal to open and close.
+  //State to Close and Open a Modal
   const [openModal, setOpenModal] = useState(false);
 
-  // nextSlide function to view particular flashterms defination with index number.
+  //Function to view specific cardTerms defination
   const nextSlide = (card) => {
-    if (slideIndex !== card.flashterms.length) {
+    if (slideIndex !== card.cardTerms.length) {
       setSlideIndex(slideIndex + 1);
-    } else if (slideIndex === card.flashterms.length) {
+    } else if (slideIndex === card.cardTerms.length) {
       setSlideIndex(1);
     }
   };
 
-  //// prevSlide function to view particular flashterms defination with index number.
+  //Function to view specific cardTerms defination
   const prevSlide = (card) => {
     if (slideIndex !== 1) {
       setSlideIndex(slideIndex - 1);
     } else if (slideIndex === 1) {
-      setSlideIndex(card.flashterms.length);
+      setSlideIndex(card.cardTerms.length);
     }
   };
 
   return (
     <div>
       <div className="card-detail capitalize">
-        {/* using filter method to match url id with oncliked card id.
-        apply map method to view card details only if card id is matched with useparams id  */}
-        {data
+        {userCards
           .filter((card) => card.id === id)
           .map((card, index) => (
-            <div
-              key={index}
-              className="mx-7 sm:mx-12 md:mx-20 lg:mx-24"
-            >
+            <div key={index} className="mx-7 sm:mx-12 md:mx-20 lg:mx-24">
               <div className="flex pt-4 break-all">
                 <Link to="/Mycards">
                   <MdWest className="mr-4 mt-1.5 text-lg" />
                 </Link>
 
                 <div className="pr-6">
-                  <h1 className=" font-bold">{card.groupname}</h1>
+                  <h1 className=" font-bold">{card.groupName}</h1>
                   <p className="text-gray-500 mb-6">{card.description}</p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-6  gap-6 ">
                 <div className="term-list">
-                  <div className="bg-slate-50 p-5 rounded-md border border-gray-200 shadow-md overflow-hidden ">
+                  <div className="bg-white p-5 rounded-md border border-gray-200 shadow-md overflow-hidden ">
                     <h2 className="mb-3 font-semibold text-gray-400">
                       Flashcards
                     </h2>
                     <hr className="text-lg" />
 
                     <ul className="text-gray-500  font-semibold overflow-hidden text-ellipsis whitespace-pre">
-                      {card.flashterms.map((term, index) => (
+                      {card.cardTerms.map((term, index) => (
                         <li
                           key={index}
                           className={
                             slideIndex - 1 === index
-                              ? "my-3 px-1 flex justify-center rounded-md bg-red-100 text-red-500"
-                              : "my-3 text-gray-500"
+                              ? "my-3 px-1 rounded-md bg-red-100 text-red-500"
+                              : "my-3 px-1 text-gray-500"
                           }
                           onClick={() => nextSlide(index + 1)}
                         >
-                          {card.flashterms[index].term}
+                          {card.cardTerms[index].term}
                         </li>
                       ))}
                     </ul>
@@ -88,7 +88,7 @@ const Viewcard = ({ data }) => {
                 </div>
 
                 <div className="relative md:grid md:grid-flow-col md:gap-6 md:col-span-4">
-                  <div className=" bg-slate-50 flex px-10 py-8 mb-10 rounded-md border border-gray-200 shadow-md">
+                  <div className=" bg-white flex px-10 py-8 mb-10 rounded-md border border-gray-200 shadow-md">
                     <div className="flex items-center p-4 justify-center sm:h-auto sm:w-40 lg:w-60 lg:h-40 border-2 rounded-md">
                       <span className="text-center text-slate-300">
                         No Image <br /> Available
@@ -96,8 +96,8 @@ const Viewcard = ({ data }) => {
                     </div>
 
                     <div className="w-auto">
-                      <p className=" text-gray-500 pl-5 break-all">
-                        {card.flashterms[slideIndex - 1].defination}
+                      <p className=" text-gray-600 pl-5 break-all">
+                        {card.cardTerms[slideIndex - 1].defination}
                       </p>
                     </div>
                   </div>
@@ -107,7 +107,7 @@ const Viewcard = ({ data }) => {
                       onClick={() => prevSlide(card)}
                     />
                     <small className="text-base mx-6">
-                      {slideIndex}/{card.flashterms.length}
+                      {slideIndex}/{card.cardTerms.length}
                     </small>
                     <MdOutlineNavigateNext
                       className="after"
@@ -144,4 +144,4 @@ const Viewcard = ({ data }) => {
   );
 };
 
-export default Viewcard;
+export default ViewCard;

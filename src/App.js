@@ -1,33 +1,18 @@
+import { CFlashCard, DisplayCards, Navbar, ViewCard } from "./components";
 
-import Createflashcard from "./components/createflashcard/Createflashcard.js";
-import Mycards from "./components/mycards/Mycards.js";
-import Navbar from "./components/navbar/Navbar.js";
-import Viewcard from "./components/viewcard/Viewcard.js";
-
-
-import { HashRouter, Route, Routes } from "react-router-dom";
-import {getMyflashCards} from './service/Localstorage.js'
-import { useState, useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 function App() {
-  const [data, setData]= useState([])
-  
-  useEffect(()=>{
-    setData(getMyflashCards())
-  },[])
-
-
   return (
     <>
-      <HashRouter >
+      <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path="/" exact element={<Createflashcard />} />
-
-          <Route path="/mycards"   element={<Mycards />} />
-          <Route path="/view-card/details/:id"  element={<Viewcard data={data}/>} />
+          <Route path="/" exact element={<CFlashCard />} />
+          <Route path="/mycards" element={<DisplayCards />} />
+          <Route path="/card/details/:id" element={<ViewCard />} />
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </>
   );
 }
